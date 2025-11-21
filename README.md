@@ -1,15 +1,15 @@
 *******************
-# NEMO cfg Template
+# ARCtic 1/36 degree NEMO configuration
 *******************
 
-This model configuration has been developed for ...
+This model configuration has been developed for the Arctic Ocean for the CANARI project.
 
 *****************************************
-## NEMO regional configuration of the ...
+## NEMO regional configuration of the Arctic Ocean
 *****************************************
 
 ### Model Summary
-
+To do below
 The model grid:
 - has *X/Y*&deg; lat-lon resolution 
 - *Z* hybrid sigma / z-partial-step vertical levels
