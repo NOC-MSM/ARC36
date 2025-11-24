@@ -4,12 +4,15 @@
 
 This model configuration has been developed for the Arctic Ocean for the CANARI project.
 
+<img width="541" alt="ARC36 Mesh Grid" src="https://github.com/NOC-MSM/ARC36/blob/master/images/ARC36grid.png" />
+
 *****************************************
 ## NEMO regional configuration of the Arctic Ocean
 *****************************************
 
 ### Model Summary
 To do below
+
 The model grid:
 - has *X/Y*&deg; lat-lon resolution 
 - *Z* hybrid sigma / z-partial-step vertical levels
