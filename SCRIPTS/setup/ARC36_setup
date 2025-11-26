@@ -1,10 +1,10 @@
 #!/bin/bash
-# Lightweight script to set up NAARC on ARCHER2 or Anemone (NOC and UoS cluster)
+# Lightweight script to set up ARC36 on ARCHER2
 set -e
 
 display_usage() {
    echo
-   echo "  Auto-Config: NAARC on ARCHER2 or Anemone"
+   echo "  Auto-Config: ARC36 on ARCHER2"
    echo "  ***************************************"
    echo
    echo "  usage: ${0##*/} -p path_to_install -r path_to_repo -n nemo_version"
@@ -85,15 +85,15 @@ case "${HPC_TARG}"
            fi
            export LD_LIBRARY_PATH=$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
            ;;
-  anemone) ENV_FILE=$REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}
-	  if [ -f "$ENV_FILE" ]; then
-	    . $REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}
-	  else
-             echo "ENV file not recognised"
-             echo "For anemone: ifort && impi are available"
-             exit 1
-           fi
-           ;;
+#  anemone) ENV_FILE=$REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}
+#	  if [ -f "$ENV_FILE" ]; then
+#	    . $REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}
+#	  else
+#             echo "ENV file not recognised"
+#             echo "For anemone: ifort && impi are available"
+#             exit 1
+#           fi
+#           ;;
 # metO) ENV_FILE=$REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}-ucx
 #          if [ -f "$ENV_FILE" ]; then
 #            . $REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}
@@ -104,18 +104,19 @@ case "${HPC_TARG}"
 #          fi
 #          ;;
   *)       echo "Machine not recognised"
-           echo "Machines available: archer2, anemone"
+           echo "Machines available: archer2"
+           #echo "Machines available: archer2, anemone"
            #echo "Machines available: archer2, anemone, metO"
            exit 1
 esac
 
 case "${NEMO_VER}"
   in
-  4.2|4.2.2|4.2.3|5.0|5.0.1)
+  5.0)
            echo "NEMO Version $NEMO_VER will be checked out"
 	   ;;
   *)       echo "NEMO Version not recognised"
-           echo "Versions available: 4.2, 4.2.2, 4.2.3, 5.0"
+           echo "Versions available: 5.0"
            exit 1
 esac
 
@@ -123,13 +124,7 @@ esac
 echo "Checking out NEMO repository"
 case "${NEMO_VER}"
   in
-    4.2)
-           git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch branch_4.2 https://forge.nemo-ocean.eu/nemo/nemo.git nemo
-           cd nemo
-           git sparse-checkout add makenemo mk src cfgs/SHARED cfgs/ref_cfgs.txt ext
-           git checkout
-           ;;
-  4.2.2|4.2.3|5.*)
+  5.*)
            git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch $NEMO_VER https://forge.nemo-ocean.eu/nemo/nemo.git nemo
            cd nemo
            git sparse-checkout add makenemo mk src cfgs/SHARED cfgs/ref_cfgs.txt ext
@@ -140,7 +135,7 @@ esac
 # Now check EXTERNALS revision number before checking out the rest
 case "${NEMO_VER}"
   in
-  4.2|4.2.?|5.*)
+  5.*)
       echo "Nothing to do as EXTERNALS are integral to $NEMO_VER"
       ;;
   *)
@@ -155,7 +150,7 @@ case "${NEMO_VER}"
 esac
 
 # Setup the directory structure
-mkdir $WORK_DIR/nemo/cfgs/NAARC
+mkdir $WORK_DIR/nemo/cfgs/ARC36
 cd $WORK_DIR
 
 # Define the location of where the forcing files are to be downloaded
@@ -166,13 +161,9 @@ echo "Checking out xios repository"
 #XIOS3/branches/xios-3.0-beta
 case "${NEMO_VER}"
   in
-  4.2|4.2.?|5.*) svn checkout  http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk@2379 xios
+  5.*) svn checkout  http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk@2379 xios
            cd xios
-           cp $REPO_DIR/arch/xios/2/* ./arch
-           ;;
-  4.0.?)   svn co http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/branchs/xios-2.5@1964 xios
-           cd xios
-           cp $REPO_DIR/arch/xios/2.5/* ./arch
+           cp $REPO_DIR/arch_xios/* ./arch
            ;;
   *)       echo "Nemo v < 4 is not supported by XIOS 2.5"
            exit 1
@@ -187,15 +178,15 @@ export XIOS_DIR=$WORK_DIR/xios
 [ -f $XIOS_DIR/bin/xios_server.exe ] || exit 1
 
 cd $WORK_DIR/nemo
-cp -r $REPO_DIR/arch/nemo/$NEMO_VER arch
+cp -r $REPO_DIR/ARCH/nemo/$NEMO_VER arch
 # Dirty fix to hard wire path otherwise user will have to set XIOS_DIR in every new shell session
 sed -i "s?XXX_XIOS_DIR_XXX?$XIOS_DIR?" ./arch/arch-${HPC_TARG}-${COMPILER}-${MPI_TARG}.fcm
 
-echo 'NAARC OCE ICE' >> $WORK_DIR/nemo/cfgs/work_cfgs.txt
+echo 'ARC36 OCE ICE' >> $WORK_DIR/nemo/cfgs/work_cfgs.txt
 
 echo "Gathering forcing data"
 
-export CONFIG_DIR=$WORK_DIR/nemo/cfgs/NAARC
+export CONFIG_DIR=$WORK_DIR/nemo/cfgs/ARC36
 
 cd $CONFIG_DIR
 
@@ -210,12 +201,13 @@ then
 else
   case "${HPC_TARG}"
     in
-    archer2) ln -s /work/n01/shared/NAARC/$NEMO_VER INPUTS
-             ln -s /work/n01/shared/nemo/FORCING/JRA FORCING
+    archer2) ln -s /work/n01/n01/benbar/ARC36/INPUTS/$NEMO_VER INPUTS
+             ln -s /work/n01/n01/benbar/ARC36/FORCING FORCING
+             #ln -s /work/n01/shared/nemo/FORCING/JRA FORCING
              ;;
-    anemone) ln -s /dssgfs01/working/jdha/NAARC/$NEMO_VER INPUTS
-             ln -s /dssgfs01/working/acc/FORCING FORCING
-             ;;
+#    anemone) ln -s /dssgfs01/working/jdha/NAARC/$NEMO_VER INPUTS
+#             ln -s /dssgfs01/working/acc/FORCING FORCING
+#             ;;
 #   metO) ln -s /path/to/inputs/$NEMO_VER INPUTS
 #            ln -s /path/to/forcing FORCING
 #            ;;
@@ -234,18 +226,6 @@ mkdir OUTPUTS_ZIP
 
 ln -s $XIOS_DIR/bin/xios_server.exe $CONFIG_DIR/EXPREF/xios_server.exe
 
-# Link some files from INPUTS that are hardwired to be in the experiment directory
-#ln -s INPUTS/K1rowdrg_R025_modif_nonpositive.nc K1rowdrg.nc
-#ln -s INPUTS/M2rowdrg_R025_modif_nonpositive.nc M2rowdrg.nc
-#ln -s INPUTS/mask_itf_ORCA025ext.nc mask_itf.nc
-#ln -s INPUTS/bfr_coef.nc .
-#ln -s INPUTS/shlat2d.nc .
-#case "${NEMO_VER}"
-#  in
-#  4.2.?)  ln -s INPUTS/zdfiwm_forcing.nc .
-#           ;;
-#esac
-
 # Copy remaining information
 case "${NEMO_VER}"
   in
@@ -256,7 +236,7 @@ esac
 cp -r $REPO_DIR/scripts/run/$HPC_TARG/* $CONFIG_DIR/EXPREF
 find $REPO_DIR/scripts/run -maxdepth 1 -type f -execdir cp "{}" $CONFIG_DIR/EXPREF ";"
 
-cp $REPO_DIR/CPP/$NEMO_VER/cpp_NAARC.fcm $CONFIG_DIR/
+cp $REPO_DIR/CPP/$NEMO_VER/cpp_ARC36_OCE_ICE.fcm $CONFIG_DIR/
  
 # copy CPOM changes for form drag into MY_SRC if 4.2.2
 
@@ -278,10 +258,10 @@ cd $CONFIG_DIR/EXPREF
 case "${HPC_TARG}"
   in
   archer2) sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runscript.slurm
-           sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runzip.slurm
+#           sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runzip.slurm
            ;;
-  anemone) sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}?" runscript.slurm
-           ;;
+#  anemone) sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}?" runscript.slurm
+#           ;;
 # metO)    sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}?" runscript.slurm
 #          sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}?" runzip.slurm
 #          ;;
@@ -304,13 +284,13 @@ done
 cd $WORK_DIR/nemo
 
 echo "Compiling nemo NAARC Config"
-./makenemo -m ${HPC_TARG}-${COMPILER}-${MPI_TARG} -r NAARC -n NAARC -j 16
+./makenemo -m ${HPC_TARG}-${COMPILER}-${MPI_TARG} -r ARC36 -n ARC36 -j 16
 
 echo
-echo "  Auto-Config: NAARC"
+echo "  Auto-Config: ARC36"
 echo "  **********************"
 echo
-echo "  To run the NAARC Configuration:"
+echo "  To run the ARC36 Configuration:"
 echo
 echo "  - cp -rP EXPREF EXP_MYRUN "
 echo "  - link the correct domain_cfg.nc "
