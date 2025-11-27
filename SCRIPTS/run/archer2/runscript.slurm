@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=ARC36
 #SBATCH --time=24:00:00
-#SBATCH --account=n02-n01
+#SBATCH --account=n01-CANARI
 #SBATCH --partition=standard
 #SBATCH --qos=standard
 
