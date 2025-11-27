@@ -24,10 +24,10 @@
    jpl              =   5             !  number of ice  categories
    nlay_i           =   2             !  number of ice  layers
    nlay_s           =   2             !  number of snow layers
-   ln_icethd        = .true.,          !  ice thermo   (T) or not (F)
-   ln_icedyn        = .true.,          !  ice dynamics (T) or not (F)
-   cn_icerst_indir  = "./restart_in/"             !  directory to read   input ice restarts
-   cn_icerst_outdir = "./restart_out/"             !  directory to write output ice restarts
+   ln_icethd        =.true.,          !  ice thermo   (T) or not (F)
+   ln_icedyn        =.true.,          !  ice dynamics (T) or not (F)
+   cn_icerst_indir  = "./INPUTS/ICE/"             !  directory to read   input ice restarts
+   cn_icerst_outdir = "./RESTARTS/"             !  directory to write output ice restarts
 /
 !------------------------------------------------------------------------------
 &namitd         !   Ice discretization
@@ -45,9 +45,9 @@
 !------------------------------------------------------------------------------
 &namdyn_rhg     !   Ice rheology
 !------------------------------------------------------------------------------
-   ln_rhg_EVP       = .true.,        !  EVP rheology
-   ln_rhg_EAP       = .false.,         !  EAP rheology
-      ln_aEVP       = .true.,         !     adaptive rheology (Kimmritz et al. 2016 & 2017)
+   ln_rhg_EVP       =.true.,        !  EVP rheology
+   ln_rhg_EAP       =.false.,         !  EAP rheology
+      ln_aEVP       =.true.,         !     adaptive rheology (Kimmritz et al. 2016 & 2017)
    nn_rhg_chkcvg    =   0             !     check convergence of rheology
                                       !     = 0  no check
                                       !     = 1  check at the main time step (output xml: uice_cvg)
@@ -86,8 +86,8 @@
 !------------------------------------------------------------------------------
 &namthd_pnd     !   Melt ponds
 !------------------------------------------------------------------------------
-   ln_pnd            = .false.,         !  activate melt ponds or not
-      ln_pnd_LEV     = .false.,         !  level ice melt ponds
+   ln_pnd            =.false.,         !  activate melt ponds or not
+      ln_pnd_LEV     =.false.,         !  level ice melt ponds
 /
 !------------------------------------------------------------------------------
 &namini         !   Ice initialization
@@ -98,7 +98,7 @@
 !------------------------------------------------------------------------------
 &namini         !   Ice initialization
 !------------------------------------------------------------------------------
-   ln_iceini        = .true.,          !  activate ice initialization (T) or not (F)
+   ln_iceini        =.true.,          !  activate ice initialization (T) or not (F)
    nn_iceini_file   =   0             !     0 = Initialise sea ice based on SSTs
                                       !     1 = Initialise sea ice from single category netcdf file
                                       !     2 = Initialise sea ice from multi category restart file

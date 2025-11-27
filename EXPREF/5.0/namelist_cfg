@@ -26,16 +26,16 @@
    nn_date0    =  20080101 !  date at nit_0000 (format yyyymmdd) used if ln_rstart=F or (ln_rstart=T and nn_rstctl=0 or 1)
    nn_time0    =      0000 !  initial time of day in hhmm
    nn_leapy    =       1   !  Leap year calendar (1) or not (0)
-   ln_rstart   = .true.,   !  start from rest (F) or from a restart file (T)
+   ln_rstart   =.true.,   !  start from rest (F) or from a restart file (T)
       nn_rstctl    =    2     !  restart control ==> activated only if ln_rstart=T
       !                          !    = 0 nn_date0 read in namelist ; nn_it000 : read in namelist
       !                          !    = 1 nn_date0 read in namelist ; nn_it000 : check consistancy between namelist and restart
       !                          !    = 2 nn_date0 read in restart  ; nn_it000 : check consistancy between namelist and restart
-      cn_ocerst_indir = "./restart_in/"         !  directory from which to read input ocean restarts
-      cn_ocerst_outdir = "./restart_out/"        !  directory in which to write output ocean restarts
+      cn_ocerst_indir = "./INPUTS/"         !  directory from which to read input ocean restarts
+      cn_ocerst_outdir = "./RESTARTS/"        !  directory in which to write output ocean restarts
    nn_istate   =       0   !  output the initial state (1) or not (0)
-   ln_mskland = .true.,
-   ln_rst_list = .true.,  !  output restarts at list of times using nn_stocklist (T) or at set frequency with nn_stock (F)
+   ln_mskland =.true.,
+   ln_rst_list =.true.,  !  output restarts at list of times using nn_stocklist (T) or at set frequency with nn_stock (F)
    nn_stocklist = 460800,548640 ! List of timesteps when a restart file is to be written
 /
 !-----------------------------------------------------------------------
@@ -43,23 +43,23 @@
 !-----------------------------------------------------------------------
    rn_Dt       = 60.      !  time step for the dynamics and tracer
    rn_atfp = 0.05          !  asselin time filter parameter
-   ln_meshmask = .false.,  !  =T create a mesh file
-   ln_shuman   = .true.,   !  =T  shuman averaging active  (RK3 only)
+   ln_meshmask =.false.,  !  =T create a mesh file
+   ln_shuman   =.true.,   !  =T  shuman averaging active  (RK3 only)
 /
 !-----------------------------------------------------------------------
 &namcfg        !   parameters of the configuration                      (default: user defined GYRE)
 !-----------------------------------------------------------------------
-   ln_read_cfg = .true.,    !  (=T) read the domain configuration file
+   ln_read_cfg =.true.,    !  (=T) read the domain configuration file
    cn_domcfg = "domain_cfg.nc"    ! domain configuration filename
 /
 !-----------------------------------------------------------------------
 &namtsd        !    Temperature & Salinity Data  (init/dmp)             (default: OFF)
 !-----------------------------------------------------------------------
    !                       ! =T  read T-S fields for:
-   ln_tsd_init = .true.,        !  ocean initialisation
-   ln_tsd_dmp  = .false.,        !  T-S restoring   (see namtra_dmp)
+   ln_tsd_init =.true.,        !  ocean initialisation
+   ln_tsd_dmp  =.false.,        !  T-S restoring   (see namtra_dmp)
 
-   cn_dir      = './INPUT/'      !  root directory for the T-S data location
+   cn_dir      = './INPUTS/'      !  root directory for the T-S data location
    !___________!_________________________!___________________!___________!_____________!________!___________!__________________!__________!_______________!
    !           !  file name              ! frequency (hours) ! variable  ! time interp.!  clim  ! 'yearly'/ ! weights filename ! rotation ! land/sea mask !
    !           !                         !  (if <0  months)  !   name    !   (logical) !  (T/F) ! 'monthly' !                  ! pairing  !    filename   !
@@ -92,7 +92,7 @@
 &namsbc        !   Surface Boundary Condition (surface module)
 !-----------------------------------------------------------------------
    nn_fsbc     = 1         !  frequency of SBC module call
-   ln_blk      = .true.,    !  Bulk formulation                          (T => fill namsbc_blk )
+   ln_blk      =.true.,    !  Bulk formulation                          (T => fill namsbc_blk )
    nn_ice      = 2         !  =0 no ice boundary condition
       !                    !  =1 use observed ice-cover                 (  => fill namsbc_iif )
       !                    !  =2 or 3 for SI3 and CICE, respectively
@@ -101,11 +101,11 @@
 &namsbc_blk   !   namsbc_blk  generic Bulk formula                      (ln_blk =T)
 !-----------------------------------------------------------------------
    !                    !  bulk algorithm :
-   ln_NCAR      = .false.,    ! "NCAR"      algorithm   (Large and Yeager 2008)
-   ln_ECMWF     = .true.
-   ln_crt_fbk   = .true.
+   ln_NCAR      =.false.,    ! "NCAR"      algorithm   (Large and Yeager 2008)
+   ln_ECMWF     =.true.,
+   ln_crt_fbk   =.true.,
    !
-   cn_dir      = './INPUT/'      !  root directory for the bulk data location
+   cn_dir      = './FORCING/'      !  root directory for the bulk data location
    !___________!_________________________!___________________!___________!_____________!________!___________!______________________________________!__________!_______________!
    !           !  file name              ! frequency (hours) ! variable  ! time interp.!  clim  ! 'yearly'/ !       weights filename               ! rotation ! land/sea mask !
    !           !                         !  (if <0  months)  !   name    !   (logical) !  (T/F) ! 'monthly' !                                      ! pairing  !    filename   !
@@ -123,7 +123,7 @@
 &namsbc_ssr
     nn_sssr = 2,
     rn_deds = -333.3333333,
-    cn_dir = './INPUT/',
+    cn_dir = './INPUTS/',
     sn_sss = 'SSS_WOA1-eARC36_WOA1_3D_akima', -1, 'SSS', .true., .true., 'yearly',
              '', '', '',
 /
@@ -141,11 +141,12 @@
 !-----------------------------------------------------------------------
 &nambdy        !  unstructured open boundaries                          (default: OFF)
 !-----------------------------------------------------------------------
-   ln_bdy         = .true.,  !  Use unstructured open boundaries
+   ln_bdy         =.true.,  !  Use unstructured open boundaries
    nb_bdy         = 1         !  number of open boundary sets
-   ln_coords_file = .true.,   !  =T : read bdy coordinates from file
-   ln_mask_file   = .false.,  !  =T : read mask from file
-      cn_mask_file = ''        !  name of mask file (if ln_mask_file=.TRUE.)
+   ln_coords_file =.true.,   !  =T : read bdy coordinates from file
+      cn_coords_file = './INPUTS/coordinates.bdy.nc'  !  bdy coordinates files
+   ln_mask_file   =.false.,  !  =T : read mask from file
+      cn_mask_file = ''        !  name of mask file (if ln_mask_file=.TRUE.,)
    cn_dyn2d    = 'flather'       !
    nn_dyn2d_dta   =  0        !  = 0, bdy data are equal to the initial state
       !                       !  = 1, bdy data are read in 'bdydata   .nc' files
@@ -166,7 +167,7 @@
    rn_time_dmp   =  1.        !  Damping time scale in days
    rn_time_dmp_out = 1.       !  Outflow damping time scale
    nn_rimwidth   = 24         !  width of the relaxation zone
-   ln_vol        = .false.,   !  total volume correction (see nn_volctl parameter)
+   ln_vol        =.false.,   !  total volume correction (see nn_volctl parameter)
    nn_volctl     =  0         !  = 0, the total water flux across open boundaries is zero
 /
 !
@@ -189,7 +190,7 @@
 !-----------------------------------------------------------------------
 &namdrg        !   top/bottom drag coefficient                          (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_non_lin  = .true.,   !  non-linear  drag: Cd = Cd0 |U|
+   ln_non_lin  =.true.,   !  non-linear  drag: Cd = Cd0 |U|
 /
 !-----------------------------------------------------------------------
 &namdrg_bot    !   BOTTOM friction                                      (ln_drg_OFF =F)
@@ -199,7 +200,7 @@
 !-----------------------------------------------------------------------
 &nambbl        !   bottom boundary layer scheme                         (default: OFF)
 !-----------------------------------------------------------------------
-   ln_trabbl   = .true.,   !  Bottom Boundary Layer parameterisation flag
+   ln_trabbl   =.true.,   !  Bottom Boundary Layer parameterisation flag
 /
 !!======================================================================
 !!                        Tracer (T-S) namelists                      !!
@@ -215,21 +216,21 @@
 !-----------------------------------------------------------------------
 &nameos        !   ocean Equation Of Seawater                           (default: OFF)
 !-----------------------------------------------------------------------
-   ln_teos10    = .true.,         !  = Use TEOS-10 equation of state
+   ln_teos10    =.true.,         !  = Use TEOS-10 equation of state
 /
 !-----------------------------------------------------------------------
 &namtra_adv    !   advection scheme for tracer                          (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_traadv_fct = .true.,    !  FCT scheme
+   ln_traadv_fct =.true.,    !  FCT scheme
       nn_fct_h   =  4               !  =2/4, horizontal 2nd / 4th order 
       nn_fct_v   =  4               !  =2/4, vertical   2nd / COMPACT 4th order 
 /
 !-----------------------------------------------------------------------
 &namtra_ldf    !   lateral diffusion scheme for tracers                 (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_traldf_lap   = .true.,   !    laplacian operator
-   ln_traldf_iso   = .true.,   !  iso-neutral (Standard operator)
-   ln_traldf_msc   = .true.,   !  Method of Stabilizing Correction      (both operators)
+   ln_traldf_lap   =.true.,   !    laplacian operator
+   ln_traldf_iso   =.true.,   !  iso-neutral (Standard operator)
+   ln_traldf_msc   =.true.,   !  Method of Stabilizing Correction      (both operators)
    !                       !  Coefficients:
    nn_aht_ijk_t    = 20        !  space/time variation of eddy coef
       !                             !   = 20     aht = 1/2  Ud. max(e1,e2)
@@ -250,29 +251,29 @@
 !-----------------------------------------------------------------------
 &namdyn_adv    !   formulation of the momentum advection                (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_dynadv_vec = .true., !  vector form - 2nd centered scheme
+   ln_dynadv_vec =.true., !  vector form - 2nd centered scheme
      nn_dynkeg     = 1        ! grad(KE) scheme: =0   C2  ;  =1   Hollingsworth correction
 /
 !-----------------------------------------------------------------------
 &namdyn_vor    !   Vorticity / Coriolis scheme                          (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_dynvor_een = .true., !  energy & enstrophy scheme
+   ln_dynvor_een =.true., !  energy & enstrophy scheme
 /
 !-----------------------------------------------------------------------
 &namdyn_hpg    !   Hydrostatic pressure gradient option                 (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_hpg_sco  = .true., !  s-coordinate (standard jacobian formulation)
+   ln_hpg_sco  =.true., !  s-coordinate (standard jacobian formulation)
 /
 !-----------------------------------------------------------------------
 &namdyn_spg    !   surface pressure gradient                            (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_dynspg_ts  = .true., !  split-explicit free surface
+   ln_dynspg_ts  =.true., !  split-explicit free surface
 /
 !-----------------------------------------------------------------------
 &namdyn_ldf    !   lateral diffusion on momentum                        (default: NO selection)
 !-----------------------------------------------------------------------
-   ln_dynldf_lap =  .true.,    !    laplacian operator
-   ln_dynldf_lev =  .true.,    !  iso-level
+   ln_dynldf_lap =.true.,    !    laplacian operator
+   ln_dynldf_lev =.true.,    !  iso-level
    nn_ahm_ijk_t  = 20         ! = 20  F(i,j)=F(grid spacing)=c2d 
     rn_Uv = 0.0041
 /
@@ -291,15 +292,15 @@
 &namzdf        !   vertical physics manager                             (default: NO selection)
 !-----------------------------------------------------------------------
     !                       ! adaptive-implicit vertical advection
-    ln_zad_Aimp = .true.,      !  Courant number dependent scheme (Shchepetkin 2015)
-   ln_zdftke   = .true.,      !  Turbulent Kinetic Energy closure       (T =>   fill namzdf_tke)
-   ln_zdfevd   = .true.,      !  Enhanced Vertical Diffusion scheme
+    ln_zad_Aimp =.true.,      !  Courant number dependent scheme (Shchepetkin 2015)
+   ln_zdftke   =.true.,      !  Turbulent Kinetic Energy closure       (T =>   fill namzdf_tke)
+   ln_zdfevd   =.true.,      !  Enhanced Vertical Diffusion scheme
       nn_evdm  =    1            !  evd apply on tracer (=0) or on tracer and momentum (=1)
       rn_evd   =  10.0           !  evd mixing coefficient [m2/s]
-   ln_zdfddm   = .true.,   ! double diffusive mixing
+   ln_zdfddm   =.true.,   ! double diffusive mixing
       rn_avts  =    1.e-4     !  maximum avs (vertical mixing on salinity)
       rn_hsbfr =    1.6       !  heat/salt buoyancy flux ratio
-   ln_zdfiwm   = .true.,      ! internal wave-induced mixing            (T =>   fill namzdf_iwm)
+   ln_zdfiwm   =.true.,      ! internal wave-induced mixing            (T =>   fill namzdf_iwm)
    !                       !  Coefficients
    rn_avm0     =   1.2e-4     !  vertical eddy viscosity   [m2/s]       (background Kz if ln_zdfcst=F)
    rn_avt0     =   1.2e-5     !  vertical eddy diffusivity [m2/s]       (background Kz if ln_zdfcst=F)
@@ -317,7 +318,7 @@
       !                       !        = 0 none ; = 1 add a tke source below the ML
       !                       !        = 2 add a tke source just at the base of the ML
       !                       !        = 3 as = 1 applied on HF part of the stress           (ln_cpl=T)
-      ln_mxhsw    = .false.,  !  surface mixing length scale = F(wave height)
+      ln_mxhsw    =.false.,  !  surface mixing length scale = F(wave height)
       nn_mxlice = 2           ! type of scaling under sea-ice
       !                       !    = 0 no scaling under sea-ice
       !                       !    = 1 scaling with constant sea-ice thickness
@@ -354,18 +355,18 @@
 !-----------------------------------------------------------------------
 &nammpp        !   Massively Parallel Processing
 !-----------------------------------------------------------------------
-   ln_listonly =  .false.,  !  do nothing else than listing the best domain decompositions (with land domains suppression)
+   ln_listonly =.false.,  !  do nothing else than listing the best domain decompositions (with land domains suppression)
    !                       !  if T: the largest number of cores tested is defined by max(mppsize, jpni*jpnj)
-   ln_nnogather =  .true.,  !  activate code to avoid mpi_allgather use at the northfold
+   ln_nnogather =.true.,  !  activate code to avoid mpi_allgather use at the northfold
    jpni        =   0       !  number of processors following i (set automatically if < 1), see also ln_listonly = T
    jpnj        =   0       !  number of processors following j (set automatically if < 1), see also ln_listonly = T
 /
 !-----------------------------------------------------------------------
 &namctl        !   Control prints                                       (default: OFF)
 !-----------------------------------------------------------------------
-    sn_cfctl%l_runstat = .true.,
-    ln_timing = .false.,
-    ln_diacfl = .false.,
+    sn_cfctl%l_runstat =.true.,
+    ln_timing =.false.,
+    ln_diacfl =.false.,
 /
 !-----------------------------------------------------------------------
 &namsto        ! Stochastic parametrization of EOS                      (default: OFF)
