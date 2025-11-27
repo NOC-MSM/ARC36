@@ -10,6 +10,21 @@ This model configuration has been developed for the Arctic Ocean for the CANARI 
 ## NEMO regional configuration of the Arctic Ocean
 *****************************************
 
+### Quick Start
+```
+git clone git@github.com:NOC-MSM/ARC36.git
+./ARC36/SCRIPTS/setup/ARC36_setup -p $PWD/ARC36_RUNS -r $PWD/ARC36 -n 5.0 -x 2 -m archer2 -a mpich -c cray
+cd ARC36_RUNS/nemo/cfgs/ARC36/
+cp -rP EXPREF EXP_MYRUN
+cd EXP_MYRUN
+ln -s ../INPUTS/domain_cfg_mes.nc domain_cfg.nc
+```
+Edit the project code and options in  `runscript.slurm` then:
+```
+sbatch runscript.slurm
+```
+
+
 ### Model Summary
 To do below
 
