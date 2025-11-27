@@ -14,7 +14,7 @@ git clone git@github.com:NOC-MSM/ARC36.git
 cd ARC36_RUNS/nemo/cfgs/ARC36/
 cp -rP EXPREF EXP_MYRUN
 cd EXP_MYRUN
-ln -s ../INPUTS/domain_cfg_mes.nc domain_cfg.nc
+ln -s ../INPUTS/domain_cfg.nc domain_cfg.nc
 ```
 Edit the project code and options in  `runscript.slurm` then:
 ```
