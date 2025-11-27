@@ -75,9 +75,9 @@ echo "Making sure that the correct modules are loaded"
 
 case "${HPC_TARG}"
   in
-  archer2) ENV_FILE=$REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx
+  archer2) ENV_FILE=$REPO_DIR/SCRIPTS/env/archer2/${COMPILER}-${MPI_TARG}-ucx
            if [ -f "$ENV_FILE" ]; then
-             . $REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx
+             . $REPO_DIR/SCRIPTS/env/archer2/${COMPILER}-${MPI_TARG}-ucx
 	   else
 	     echo "ENV file not recognised"
              echo "For archer2: [ cray || gnu ] && mpich are available"
@@ -85,18 +85,18 @@ case "${HPC_TARG}"
            fi
            export LD_LIBRARY_PATH=$CRAY_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
            ;;
-#  anemone) ENV_FILE=$REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}
+#  anemone) ENV_FILE=$REPO_DIR/SCRIPTS/env/anemone/${COMPILER}-${MPI_TARG}
 #	  if [ -f "$ENV_FILE" ]; then
-#	    . $REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}
+#	    . $REPO_DIR/SCRIPTS/env/anemone/${COMPILER}-${MPI_TARG}
 #	  else
 #             echo "ENV file not recognised"
 #             echo "For anemone: ifort && impi are available"
 #             exit 1
 #           fi
 #           ;;
-# metO) ENV_FILE=$REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}-ucx
+# metO) ENV_FILE=$REPO_DIR/SCRIPTS/env/metO/${COMPILER}-${MPI_TARG}-ucx
 #          if [ -f "$ENV_FILE" ]; then
-#            . $REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}
+#            . $REPO_DIR/SCRIPTS/env/metO/${COMPILER}-${MPI_TARG}
 #	   else
 #            echo "ENV file not recognised"
 #            echo "For metO: XX  && YY are available"
@@ -125,7 +125,8 @@ echo "Checking out NEMO repository"
 case "${NEMO_VER}"
   in
   5.*)
-           git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch $NEMO_VER https://forge.nemo-ocean.eu/nemo/nemo.git nemo
+           #git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch $NEMO_VER https://forge.nemo-ocean.eu/nemo/nemo.git nemo
+           git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch 5.0-beta https://forge.nemo-ocean.eu/nemo/nemo.git nemo
            cd nemo
            git sparse-checkout add makenemo mk src cfgs/SHARED cfgs/ref_cfgs.txt ext
 	   git checkout
@@ -233,10 +234,10 @@ case "${NEMO_VER}"
            ;;
 esac
 
-cp -r $REPO_DIR/scripts/run/$HPC_TARG/* $CONFIG_DIR/EXPREF
-find $REPO_DIR/scripts/run -maxdepth 1 -type f -execdir cp "{}" $CONFIG_DIR/EXPREF ";"
+cp -r $REPO_DIR/SCRIPTS/run/$HPC_TARG/* $CONFIG_DIR/EXPREF
+find $REPO_DIR/SCRIPTS/run -maxdepth 1 -type f -execdir cp "{}" $CONFIG_DIR/EXPREF ";"
 
-cp $REPO_DIR/CPP/$NEMO_VER/cpp_ARC36_OCE_ICE.fcm $CONFIG_DIR/
+cp $REPO_DIR/CPP/$NEMO_VER/cpp_ARC36.fcm $CONFIG_DIR/
  
 # copy CPOM changes for form drag into MY_SRC if 4.2.2
 
@@ -257,13 +258,13 @@ cd $CONFIG_DIR/EXPREF
 # Add ENV into runscipts
 case "${HPC_TARG}"
   in
-  archer2) sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runscript.slurm
-#           sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runzip.slurm
+  archer2) sed -i "s?XXX_ENV_XXX?$REPO_DIR/SCRIPTS/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runscript.slurm
+#           sed -i "s?XXX_ENV_XXX?$REPO_DIR/SCRIPTS/env/archer2/${COMPILER}-${MPI_TARG}-ucx?" runzip.slurm
            ;;
-#  anemone) sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/anemone/${COMPILER}-${MPI_TARG}?" runscript.slurm
+#  anemone) sed -i "s?XXX_ENV_XXX?$REPO_DIR/SCRIPTS/env/anemone/${COMPILER}-${MPI_TARG}?" runscript.slurm
 #           ;;
-# metO)    sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}?" runscript.slurm
-#          sed -i "s?XXX_ENV_XXX?$REPO_DIR/scripts/env/metO/${COMPILER}-${MPI_TARG}?" runzip.slurm
+# metO)    sed -i "s?XXX_ENV_XXX?$REPO_DIR/SCRIPTS/env/metO/${COMPILER}-${MPI_TARG}?" runscript.slurm
+#          sed -i "s?XXX_ENV_XXX?$REPO_DIR/SCRIPTS/env/metO/${COMPILER}-${MPI_TARG}?" runzip.slurm
 #          ;;
   *)       sed -i "s?XXX_ENV_XXX??" runscript.slurm
            sed -i "s?XXX_ENV_XXX??" runscript.mpirun
