@@ -284,7 +284,7 @@ done
 
 cd $WORK_DIR/nemo
 
-echo "Compiling nemo NAARC Config"
+echo "Compiling nemo ARC36 Config"
 ./makenemo -m ${HPC_TARG}-${COMPILER}-${MPI_TARG} -r ARC36 -n ARC36 -j 16
 
 echo
