@@ -1,7 +1,7 @@
 !!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 !! NEMO/OCE :   Reference namelist_ref                                !!
 !!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-!! NEMO/OCE  :  1 - Domain & run manager (namrun, namcfg, namdom, namtsd, namcrs, namc1d, namc1d_uvd)
+!! NEMO/OCE  :  1 - Domain & run manager (namrun, namcfg, namdom, namtsd, namc1d, namc1d_uvd)
 !! namelists    2 - Surface boundary (namsbc, namsbc_flx, namsbc_blk, namsbc_cpl,
 !!                                    namsbc_sas, namtra_qsr, namsbc_rnf,
 !!                                    namisf, namsbc_apr, 
@@ -11,7 +11,7 @@
 !!              5 - Tracer           (nameos, namtra_adv, namtra_ldf, namtra_eiv, namtra_dmp)
 !!              6 - dynamics         (namdyn_adv, namdyn_vor, namdyn_hpg, namdyn_spg, namdyn_ldf)
 !!              7 - Vertical physics (namzdf, namzdf_ric, namzdf_tke, namzdf_gls, namzdf_iwm)
-!!              8 - diagnostics      (namnc4, namtrd, namspr, namflo, namhsb)
+!!              8 - diagnostics      (namnc4, namtrd, namspr)
 !!              9 - Obs & Assim      (namobs, nam_asminc)
 !!             10 - miscellaneous    (nammpp, namctl, namsto)
 !!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -24,7 +24,6 @@
 !!   namcfg       parameters of the configuration                       (default: user defined GYRE)
 !!   namwad       Wetting and drying                                    (default: OFF)
 !!   namtsd       data: temperature & salinity                          (default: OFF)
-!!   namcrs       coarsened grid (for outputs and/or TOP)               (ln_crs =T)
 !!   namc1d       1D configuration options                              (ln_c1d =T)
 !!   namc1d_dyndmp 1D newtonian damping applied on currents             (ln_c1d =T)
 !!   namc1d_uvd   1D data (currents)                                    (ln_c1d =T)
@@ -73,7 +72,6 @@
    rn_Dt       = 5400.     !  time step for the dynamics and tracer
    rn_atfp     =    0.1    !  asselin time filter parameter
    !
-   ln_crs      = .false.   !  Logical switch for coarsening module      (T => fill namcrs)
    ln_c1d      = .false.   !  Single column domain (1x1pt)              (T => fill namc1d)
    !
    ln_meshmask = .true.    !  =T create a mesh file
@@ -92,9 +90,6 @@
       !
    ln_write_cfg = .false.    !  (=T) create the domain configuration file
       cn_domcfg_out = "domain_cfg_out" ! newly created domain configuration filename
-      !
-   ln_use_jattr = .false.    !  use (T) the file attribute: open_ocean_jstart, if present
-   !                         !  in netcdf input files, as the start j-row for reading
 /
 !-----------------------------------------------------------------------
 &namtile        !   parameters of the tiling
@@ -135,7 +130,7 @@
 &namwad        !   Wetting and Drying (WaD)                             (default: OFF)
 !-----------------------------------------------------------------------
    ln_wd_dl    = .false.   !  T/F activation of directional limiter
-   ln_wd_dl_bc = .false.   !  T/F Directional limiteer Baroclinic option
+   ln_wd_dl_bc = .false.   !  T/F Directional limiter Baroclinic option
    ln_wd_dl_rmp = .false.  !  T/F Turn on directional limiter ramp
    rn_wdmin0   =  0.30     !  depth at which WaD starts
    rn_wdmin1   =  0.2      !  Minimum wet depth on dried cells
@@ -145,34 +140,11 @@
    rn_wd_sbcfra =  0.999   !  Fraction of SBC fluxes at taper depth (Must be <1)
 /
 !-----------------------------------------------------------------------
-&namcrs        !   coarsened grid (for outputs and/or TOP)              (ln_crs =T)
-!-----------------------------------------------------------------------
-   nn_factx    = 3         !  Reduction factor of x-direction
-   nn_facty    = 3         !  Reduction factor of y-direction
-   nn_binref   = 0         !  Bin centering preference: NORTH or EQUAT
-      !                    !  0, coarse grid is binned with preferential treatment of the north fold
-      !                    !  1, coarse grid is binned with centering at the equator
-      !                    !    Symmetry with nn_facty being odd-numbered. Asymmetry with even-numbered nn_facty.
-   ln_msh_crs  = .false.   ! =T create a mesh & mask file
-   nn_crs_kz   = 0         ! 0, MEAN of volume boxes
-      !                    ! 1, MAX of boxes
-      !                    ! 2, MIN of boxes
-   ln_crs_wn   = .true.    ! wn coarsened (T) or computed using horizontal divergence ( F )
-/
-!-----------------------------------------------------------------------
 &namc1d        !   1D configuration options                             (ln_c1d =T default: PAPA station)
 !-----------------------------------------------------------------------
    rn_lat1d    =    50.1   !  Column latitude
    rn_lon1d    =  -144.9   !  Column longitude
-/
-!-----------------------------------------------------------------------
-&namc1d_dyndmp !   U & V newtonian damping                              (ln_c1d =T default: OFF)
-!-----------------------------------------------------------------------
-   ln_dyndmp   =  .false.  !  add a damping term (T) or not (F)
-/
-!-----------------------------------------------------------------------
-&namc1d_uvd    !   data: U & V currents                                 (ln_c1d =T default: OFF)
-!-----------------------------------------------------------------------
+   ln_dyndmp   =  .false.  !  add a  U & V newtonian damping term (T) or not (F)
    !                       !  =T read U-V fields for:
    ln_uvd_init   = .false.       !  ocean initialisation
    ln_uvd_dyndmp = .false.       !  U-V restoring
@@ -460,7 +432,7 @@
    rn_si1      =   23.0       !  2BD : longest depth of extinction
    rn_par      =   0.47       !  5BD : fraction of photosynthetically active radiation
 
-   cn_dir      = './'      !  root directory for the chlorophyl data location
+   cn_dir      = './'      !  root directory for the chlorophyll data location
    !___________!_________________________!___________________!___________!_____________!________!___________!__________________!__________!_______________!
    !           !  file name              ! frequency (hours) ! variable  ! time interp.!  clim  ! 'yearly'/ ! weights filename ! rotation ! land/sea mask !
    !           !                         !  (if <0  months)  !   name    !   (logical) !  (T/F) ! 'monthly' !                  ! pairing  !    filename   !
@@ -519,7 +491,7 @@
 &namsbc_apr    !   Atmospheric pressure used as ocean forcing           (ln_apr_dyn =T)
 !-----------------------------------------------------------------------
    rn_pref     = 101000.   !  reference atmospheric pressure   [N/m2]/
-   ln_ref_apr  = .false.   !  ref. pressure: global mean Patm (T) or a constant (F)
+   nn_ref_apr  =   0       !  ref. pressure: 0: constant, 1: global mean or 2: read in a file
    ln_apr_obc  = .false.   !  inverse barometer added to OBC ssh data
 
    cn_dir = './'        !  root directory for the Patm data location
@@ -527,6 +499,7 @@
    !           !  file name              ! frequency (hours) ! variable  ! time interp.!  clim  ! 'yearly'/ ! weights filename ! rotation ! land/sea mask !
    !           !                         !  (if <0  months)  !   name    !   (logical) !  (T/F) ! 'monthly' !                  ! pairing  !    filename   !
    sn_apr      = 'patm'                  ,         -1.       ,'somslpre' ,   .true.    , .true. , 'yearly'  ,    ''            ,    ''    ,      ''
+   sn_apref    = 'mean_patm'             ,         -1.       ,'meanapr'  ,   .true.    , .true. , 'yearly'  ,    ''            ,    ''    ,      ''
 /
 !-----------------------------------------------------------------------
 &namisf       !  Top boundary layer (ISF)                               (default: OFF)
@@ -730,7 +703,6 @@
    ln_tide     = .false.      ! Activate tides
       nn_tide_var   = 1          !  Variant of tidal parameter set and tide-potential computation
       !                          !     (1: default; 0: compatibility with previous versions)
-      ln_tide_dia   = .false.    !  Enable tidal diagnostic output
       ln_tide_pot   = .false.               !  use tidal potential forcing
          rn_tide_gamma = 0.7                   ! Tidal tilt factor
          ln_scal_load  = .false.               ! Use scalar approximation for
@@ -1001,18 +973,17 @@
       rn_Ue        = 0.02           !  lateral diffusive velocity [m/s] (nn_aht_ijk_t= 0, 10, 20, 30)
       rn_Le        = 200.e+3        !  lateral diffusive length   [m]   (nn_aht_ijk_t= 0, 10)
       !
-      ln_ldfeiv_dia =.false.   ! diagnose eiv stream function and velocities
       ln_eke_equ    =.false.   ! switch on update of GEOMETRIC eddy energy equation        (=> fill namldf_eke)
                                ! forced to be true if nn_aei_ijk_t = 32
 /
 !----------------------------------------------------------------------------------
 &namldf_eke !   GEOMETRIC param. (total EKE equation)                           (nn_aei_ijk_t = 32)
 !----------------------------------------------------------------------------------
-   rn_ekedis      =  180.      ! dissipation time scale of EKE [days]
+   rn_ekedis      =  100.      ! dissipation time scale of EKE [days] (orca2 reference value)
       nn_eke_dis  =    0       ! dissipation option
       !                             !   =  0  constant in space
       !                             !   =-20  read in geom_diss_2D.nc file
-   rn_geom        =  0.05      ! geometric parameterization master coefficient (>0 & <1)
+   rn_geom        =  0.06      ! geometric parameterization master coefficient (>0 & <1) (orca2 reference value)
    rn_eke_init    =  1.e-1     ! initial total EKE value
    rn_eke_min     =  1.e+0     ! background value of total EKE
    rn_ross_min    =  4.e+3     ! tapering of aeiv based on min Rossby radius [m]
@@ -1318,14 +1289,10 @@
 !-----------------------------------------------------------------------
 &namzdf_osm    !   OSM vertical diffusion                               (ln_zdfosm =T)
 !-----------------------------------------------------------------------
-   ln_use_osm_la = .false.     !  Use   rn_osm_la
-   rn_osm_la     = 0.3         !  Turbulent Langmuir number
    rn_zdfosm_adjust_sd = 1.0   ! Stokes drift reduction factor
    rn_osm_hblfrac = 0.1        ! specify top part of hbl for nn_osm_wave = 3 or 4
    rn_osm_bl_thresh   = 5.e-5      !Threshold buoyancy for deepening of OSBL base
-   nn_ave = 0                  ! choice of horizontal averaging on avt, avmu, avmv
    ln_dia_osm = .true.         ! output OSMOSIS-OBL variables
-   rn_osm_hbl0 = 10.           ! initial hbl value
    ln_kpprimix = .true.        ! Use KPP-style Ri# mixing below BL
    rn_riinfty  = 0.7           ! Highest local Ri_g permitting shear instability
    rn_difri  =  0.005          ! max Ri# diffusivity at Ri_g = 0 (m^2/s)
@@ -1347,12 +1314,8 @@
 &namosm_mle    !   mixed layer eddy parametrisation (Fox-Kemper)       (default: OFF)
 !-----------------------------------------------------------------------
    rn_osm_mle_ce       = 0.06      ! magnitude of the MLE (typical value: 0.06 to 0.08)
-   nn_osm_mle          = 0         ! MLE type: =0 standard Fox-Kemper ; =1 new formulation
    rn_osm_mle_lf       = 5.e+3     ! typical scale of mixed layer front (meters)                      (case rn_osm_mle=0)
-   rn_osm_mle_time     = 43200.    ! time scale for mixing momentum across the mixed layer (seconds)  (case rn_osm_mle=0)
-   rn_osm_mle_lat      = 20.       ! reference latitude (degrees) of MLE coef.                        (case rn_mle=1)
    rn_osm_mle_rho_c    = 0.03      ! delta rho criterion used to calculate MLD for FK
-   rn_osm_mle_thresh   = 0.0001    ! delta b criterion used for FK MLE criterion
    rn_osm_mle_tau      = 172800.   ! time scale for FK-OSM (seconds)  (case rn_osm_mle=0)
    ln_osm_hmle_limit   = .true.    ! If true, limit hmle to rn_osm_hmle_limit*hbl
    rn_osm_hmle_limit   = 1.5
@@ -1389,13 +1352,10 @@
 !!                  ***  Diagnostics namelists  ***                   !!
 !!                                                                    !!
 !!   namtrd       dynamics and/or tracer trends                         (default: OFF)
-!!   namhsb       Heat and salt budgets                                 (default: OFF)
 !!   namdiu       Cool skin and warm layer models                       (default: OFF)
 !!   namdiu       Cool skin and warm layer models                       (default: OFF)
-!!   namflo       float parameters                                      (default: OFF)
 !!   nam_diadct   transports through some sections                      (default: OFF)
-!!   nam_dia25h   25h Mean Output                                       (default: OFF)
-!!   namnc4       netcdf4 chunking and compression settings             ("key_netcdf4")
+!!   namnc4       netcdf4 chunking and compression settings
 !!======================================================================
 !
 !-----------------------------------------------------------------------
@@ -1419,30 +1379,10 @@
 !!gm   ln_trdmld_instant = .false.         !  flag to diagnose trends of instantantaneous or mean ML T/S
 !!gm
 !-----------------------------------------------------------------------
-&namhsb        !  Heat and salt budgets                                 (default: OFF)
-!-----------------------------------------------------------------------
-   ln_diahsb   = .false.   !  output the heat and salt budgets (T) or not (F)
-/
-!-----------------------------------------------------------------------
 &namdiu        !   Cool skin and warm layer models                      (default: OFF)
 !-----------------------------------------------------------------------
    ln_diurnal      = .false.   !
    ln_diurnal_only = .false.   !
-/
-!-----------------------------------------------------------------------
-&namflo        !   float parameters                                     (default: OFF)
-!-----------------------------------------------------------------------
-   ln_floats   = .false.      ! activate floats or not
-      jpnfl       = 1         !    total number of floats during the run
-      jpnnewflo   = 0         !    number of floats for the restart
-      ln_rstflo   = .false.   !    float restart (T) or not (F)
-      nn_writefl  =      75   !    frequency of writing in float output file
-      nn_stockfl  =    5475   !    frequency of creation of the float restart file
-      ln_argo     = .false.   !    Argo type floats (stay at the surface each 10 days)
-      ln_flork4   = .false.   !    trajectories computed with a 4th order Runge-Kutta (T)
-      !                       !    or computed with Blanke' scheme (F)
-      ln_ariane   = .true.    !    Input with Ariane tool convention(T)
-      ln_flo_ascii= .true.    !    Output with Ariane tool netcdf convention(F) or ascii file (T)
 /
 !-----------------------------------------------------------------------
 &nam_diadct    !   transports through some sections                     (default: OFF)
@@ -1455,20 +1395,15 @@
        !                   !  0 < n : debug section number n
 /
 !-----------------------------------------------------------------------
-&nam_dia25h    !  25h Mean Output                                       (default: OFF)
-!-----------------------------------------------------------------------
-   ln_dia25h   = .false.   ! Choose 25h mean output or not
-/
-!-----------------------------------------------------------------------
-&namnc4        !   netcdf4 chunking and compression settings            ("key_netcdf4")
+&namnc4        !   netcdf4 chunking and compression settings
 !-----------------------------------------------------------------------
    nn_nchunks_i =   4       !  number of chunks in i-dimension
    nn_nchunks_j =   4       !  number of chunks in j-dimension
    nn_nchunks_k =   31      !  number of chunks in k-dimension
    !                       !  setting nn_nchunks_k = jpk will give a chunk size of 1 in the vertical which
    !                       !  is optimal for postprocessing which works exclusively with horizontal slabs
-   ln_nc4zip   = .true.    !  (T) use netcdf4 chunking and compression
-   !                       !  (F) ignore chunking information and produce netcdf3-compatible files
+   ln_nc4zip   = .false.   !  (T) use netcdf4 chunking and compression
+   !                       !  (F) ignore chunking and compression information (netcdf3 compatible file)
 /
 
 !!======================================================================
