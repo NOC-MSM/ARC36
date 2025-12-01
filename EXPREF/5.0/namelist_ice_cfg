@@ -92,12 +92,6 @@
 !------------------------------------------------------------------------------
 &namini         !   Ice initialization
 !------------------------------------------------------------------------------
-   nn_iceini_file   =   0             !     0 = Initialise sea ice based on SSTs
-                                      !     1 = Initialise sea ice from single category netcdf file
-                                      !     2 = Initialise sea ice from multi category restart file
-!------------------------------------------------------------------------------
-&namini         !   Ice initialization
-!------------------------------------------------------------------------------
    ln_iceini        =.true.,          !  activate ice initialization (T) or not (F)
    nn_iceini_file   =   0             !     0 = Initialise sea ice based on SSTs
                                       !     1 = Initialise sea ice from single category netcdf file
