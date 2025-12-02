@@ -26,7 +26,6 @@ sbatch runscript.slurm
 *****************************************
 
 ### Model Summary
-To do below
 
 The model grid:
 - has *1/36*&deg; lat-lon resolution 
