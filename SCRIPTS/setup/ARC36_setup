@@ -125,8 +125,7 @@ echo "Checking out NEMO repository"
 case "${NEMO_VER}"
   in
   5.*)
-           #git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch $NEMO_VER https://forge.nemo-ocean.eu/nemo/nemo.git nemo
-           git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch 5.0-beta https://forge.nemo-ocean.eu/nemo/nemo.git nemo
+           git clone --filter=blob:none --no-checkout --depth 1 --sparse --branch $NEMO_VER https://forge.nemo-ocean.eu/nemo/nemo.git nemo
            cd nemo
            git sparse-checkout add makenemo mk src cfgs/SHARED cfgs/ref_cfgs.txt ext
 	   git checkout
