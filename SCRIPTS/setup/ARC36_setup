@@ -183,6 +183,8 @@ cp -r $REPO_DIR/ARCH/nemo/$NEMO_VER arch
 sed -i "s?XXX_XIOS_DIR_XXX?$XIOS_DIR?" ./arch/arch-${HPC_TARG}-${COMPILER}-${MPI_TARG}.fcm
 
 echo 'ARC36 OCE ICE' >> $WORK_DIR/nemo/cfgs/work_cfgs.txt
+echo 'Git revision hash:' >> $WORK_DIR/nemo/cfgs/work_cfgs.txt
+git rev-parse --short HEAD >> $WORK_DIR/nemo/cfgs/work_cfgs.txt
 
 echo "Gathering forcing data"
 
