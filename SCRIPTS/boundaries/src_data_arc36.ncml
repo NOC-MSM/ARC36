@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<netcdf
+  title="aggregation example"
+  xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2"
+>
+  <aggregation type="union">
+
+    <!-- T -->
+    <netcdf>
+      <aggregation type="joinExisting" dimName="time_counter">
+        <!-- netcdf location="/work/scratch-pw5/benbar/ARC36/NPD025/eORCA025_1m_grid_T_200805-200805.nc" /-->
+        <scan 
+        location="/gws/ssde/j25a/nemo/vol1/benbar/ARC36/NPD025/"
+        regExp="eORCA025_1m_grid_T_.*\.nc"
+        subdirs="false"/>
+      </aggregation>
+
+      <!-- Rename existing variables using orgName -->
+      <variable name="votemper" orgName="thetao_con" />
+      <variable name="vosaline" orgName="so_abs" />
+      <variable name="sossheig" orgName="zos" />
+
+    </netcdf>
+
+    <!-- U -->
+    <netcdf>
+      <aggregation type="joinExisting" dimName="time_counter">
+        <!--netcdf location="/work/scratch-pw5/benbar/ARC36/NPD025/eORCA025_1m_grid_U_200805-200805.nc" /-->
+        <scan 
+        location="/gws/ssde/j25a/nemo/vol1/benbar/ARC36/NPD025/"
+        regExp="eORCA025_1m_grid_U_.*\.nc"
+        subdirs="false"/>
+      </aggregation>
+
+      <!-- Rename existing variables using orgName -->
+      <variable name="vozocrtx" orgName="uo" />
+
+    </netcdf>
+
+    <!-- V -->
+    <netcdf>
+      <aggregation type="joinExisting" dimName="time_counter">
+        <!-- netcdf location="/work/scratch-pw5/benbar/ARC36/NPD025/eORCA025_1m_grid_V_200805-200805.nc" /-->
+        <scan 
+        location="/gws/ssde/j25a/nemo/vol1/benbar/ARC36/NPD025/"
+        regExp="eORCA025_1m_grid_V_.*\.nc"
+        subdirs="false"/>
+      </aggregation>
+
+      <!-- Rename existing variables using orgName -->
+      <variable name="vomecrty" orgName="vo" />
+
+    </netcdf>
+
+    <!-- Ice -->
+    <netcdf>
+      <aggregation type="joinExisting" dimName="time_counter">
+        <!--netcdf location="/work/scratch-pw5/benbar/ARC36/NPD025/eORCA025_1m_icemod_200805-200805.nc" /-->
+        <scan 
+        location="/gws/ssde/j25a/nemo/vol1/benbar/ARC36/NPD025/"
+        regExp="eORCA025_1m_icemod_.*\.nc"
+        subdirs="false"/>
+      </aggregation>
+
+      <!-- Rename existing variables using orgName -->
+      <variable name="ice1" orgName="siconc" />
+      <variable name="ice2" orgName="sivolu" />
+      <variable name="ice3" orgName="snvolu" />
+
+    </netcdf>
+
+  </aggregation>
+</netcdf>
