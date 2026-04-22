@@ -203,8 +203,8 @@ then
 else
   case "${HPC_TARG}"
     in
-    archer2) ln -s /work/n01/n01/benbar/ARC36/INPUTS/$NEMO_VER INPUTS
-             ln -s /work/n01/n01/benbar/ARC36/FORCING FORCING
+    archer2) ln -s /work/n01/shared/ARC36/$NEMO_VER INPUTS
+             ln -s /work/n01/shared/ARC36/FORCING FORCING
              #ln -s /work/n01/shared/nemo/FORCING/JRA FORCING
              ;;
 #    anemone) ln -s /dssgfs01/working/jdha/NAARC/$NEMO_VER INPUTS
