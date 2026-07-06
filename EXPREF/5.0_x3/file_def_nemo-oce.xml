@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<!--
+============================================================================================================
+=                                           output files definition                                        =
+=                                            Define your own filesfor ocean dynamics context                                         =
+=                                         put the variables you want...                                    =
+============================================================================================================
+    -->
+   
+    <file_definition type="one_file" compression_level="1" name="OUTPUTS/@expname@_@freq@_@startdate@_@enddate@" sync_freq="1d" min_digits="4">
+      <file_group id="1h" compression_level="1" output_freq="1h"  output_level="10" enabled=".TRUE."> <!-- 1h files -->
+
+	    <file id="file99" name_suffix="_grid_T" mode="write" gatherer="tgatherer" writer="twriter" using_server2="true" description="global means" enabled=".true." >
+          <field field_ref="sshtot"       name="sshtot"     />
+        </file>
+
+        <file id="file9" name_suffix="_grid_U" mode="write" gatherer="ugatherer" writer="uwriter" using_server2="true" description="ocean U grid variables" enabled=".true." >
+          <field field_ref="ssu"          name="sozocrtx"   />
+        </file>
+
+        <file id="file10" name_suffix="_grid_V" mode="write" gatherer="vgatherer" writer="vwriter" using_server2="true" description="ocean V grid variables" enabled=".true." >
+          <field field_ref="ssv"          name="somecrty"   />
+        </file>
+
+        <file id="file11" name_suffix="_grid_W" mode="write" gatherer="wgatherer" writer="wwriter" using_server2="true" description="ocean W grid variables" enabled=".true." >
+          <field field_ref="woce"         name="wo"         />
+        </file>
+
+      </file_group>
+   </file_definition>
