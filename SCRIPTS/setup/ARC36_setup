@@ -161,7 +161,8 @@ echo "Checking out xios repository"
 #XIOS3/branches/xios-3.0-beta
 case "${NEMO_VER}"
   in
-  5.*) svn checkout  http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk@2379 xios
+  5.*)
+	   git clone --branch XIOS2 https://gitlab.in2p3.fr/ipsl/projets/xios-projects/xios.git xios
            cd xios
            cp $REPO_DIR/arch_xios/* ./arch
            ;;
