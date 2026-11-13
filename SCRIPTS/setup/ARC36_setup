@@ -170,7 +170,8 @@ esac
 
 
 if [[ "$NEMO_VER" == 5.* && "$XIOS_VER" == 3 ]]; then
-    svn checkout  http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS3/trunk@2904 xios
+    #svn checkout  http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS3/trunk@2904 xios
+    git clone --branch main https://gitlab.in2p3.fr/ipsl/projets/xios-projects/xios.git xios
     cd xios
     cp $REPO_DIR/arch_xios/3/* ./arch
 else
